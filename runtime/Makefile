@@ -30,6 +30,8 @@ amzn1: $(addsuffix -amzn1, 18.03.1 17.12.1 17.09.1 17.06.2 17.03.2)
 
 opensuse_leap15.0: $(addsuffix -opensuse_leap15.0, 17.09.1)
 
+opensuse_leap42.3: $(addsuffix -opensuse_leap42.3, 17.09.1)
+
 18.03.1-%-runc:
 	echo "4fc53a81fb7c994640722ac585fa9ca548971871"
 
@@ -137,3 +139,12 @@ opensuse_leap15.0: $(addsuffix -opensuse_leap15.0, 17.09.1)
                         --build-arg PKG_REV="$(PKG_REV).docker$*" \
                         -t "nvidia/runtime/opensuse/leap:15.0-docker$*" -f Dockerfile.opensuse_leap .
 	$(DOCKER) run --rm -v $(DIST_DIR)/opensuse_leap15.0:/dist:Z "nvidia/runtime/opensuse/leap:15.0-docker$*"
+
+%-opensuse_leap42.3:
+	runc="$(shell $(MAKE) -s $@-runc)" && \
+	$(DOCKER) build --build-arg VERSION_ID="42.3" \
+                        --build-arg RUNC_COMMIT="$${runc}" \
+                        --build-arg PKG_VERS="$(VERSION)" \
+                        --build-arg PKG_REV="$(PKG_REV).docker$*" \
+                        -t "nvidia/runtime/opensuse/leap:42.3-docker$*" -f Dockerfile.opensuse_leap .
+	$(DOCKER) run --rm -v $(DIST_DIR)/opensuse_leap42.3:/dist:Z "nvidia/runtime/opensuse/leap:42.3-docker$*"
